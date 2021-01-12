@@ -1,0 +1,106 @@
+HAND WRITTEN C++ MOCKS following the CppuTestMock Scheme
+========================================================
+
+// HAND WRITTEN
+// -------------
+
+// mock function
+extern "C" void ErrorHandler_vSetFatalError(ErrorHandler_FATAL_ERRTYPE_t tFatatlErrType,
+                                            ErrorHandler_FATAL_ERROR_t eError,
+											uint32_t u32CodePointId)
+{
+    // option 1: return PoorMansCppuTestMock::callNonVoid("ErrorHandler_vSetFatalError", tFatatlErrType, eError, u32CodePointId)
+	// option 2: PoorMansCppuTestMock::callVoid("ErrorHandler_vSetFatalError", tFatatlErrType, eError, u32CodePointId)
+	// option 3: throw ...
+}
+
+// expectations for mocked functions
+namespace expect {
+
+void ErrorHandler_vSetFatalError(...)  // TBD does this require at least one named param?-- has all params plus return value
+   PoorMansCppuTestMock::setExpectations("ErrorHandler_vSetFatalError", va_args);
+   // one possible expectation: expected number of calls (default 1)
+}
+// in case of void argument, you still want to be able to set the num of calls
+
+
+static const struct
+{
+    const char * const         fnName;
+	(void const * const)(void) fnPtr; 
+} poorMansCppuTestMockFnDef[] = 
+{
+    { "ErrorHandler_vSetFatalError", &(expect::ErrorHandler_vSetFatalError),
+	    { ErrorHandler_FATAL_ERRTYPE_t, ErrorHandler_FATAL_ERROR_t, uint32_t } } // check how param types can be put
+		                                   // or that 
+};
+
+
+// PROVIDED
+// --------
+
+
+enum class IgnoreParameter { YES };
+
+
+template<typename BaseType>
+class Parameter {
+public:
+    /**
+     * Constructor for non-ignored parameters.
+     * @param value [in] Value of the parameter
+     */
+    Parameter(const BaseType &value) : m_value(&value), m_isIgnored(false) {}
+
+    /**
+     * Constructor for ignored parameters.
+     *
+     * The actual value of the passed parameter is ignored.
+     */
+    Parameter(IgnoreParameter) : m_value(nullptr),  m_isIgnored(true) {}
+
+    /**
+     * Returns the parameter value.
+     * @return Parameter value
+     */
+    const BaseType& getValue()
+    {
+        return *m_value;
+    }
+
+    /**
+     * Returns the parameter value.
+     * @return Parameter value
+     */
+    const BaseType& getPointerValue()
+    {
+        return m_value;
+    }
+
+    /**
+     * Indicates if the parameter is ignored.
+     * @return @c true if the parameter is ignored, @c false otherwise
+     */
+    bool isIgnored()
+    {
+        return m_isIgnored;
+    }
+	
+
+private:
+    typename std::remove_reference<const BaseType>::type *m_value;
+    bool m_isIgnored;
+};
+
+class PoorMansCppuTestMock
+{
+	private:
+		struct that represents expactations for all fns in poorMansCppuTestMockFnDef
+		void expectNoCall (const char * const fnName) { this->expectNCalls(fnName, 0); }  // today it's public
+		void expectOneCall(const char * const fnName) { this->expectNCalls(fnName, 1); }
+		void expectNCalls (const int amount, const char * const fnName) { TBD; }
+    public:
+	    void clear(void);
+		void checkExpectations(void);
+
+}
