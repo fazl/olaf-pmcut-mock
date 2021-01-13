@@ -16,4 +16,5 @@ uint32_t Foo_u32DoFoo1( uint32_t u32Arg1 ){
 	printf("..and calling Bar_u32DoBar0(void)\n");
 	uint32_t ret = Bar_u32DoBar0();
 	printf("..and returning %u\n", ret);
+	return ret;
 }

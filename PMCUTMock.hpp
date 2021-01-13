@@ -1,15 +1,18 @@
 #ifndef PM_MOCK_H
 #define PM_MOCK_H 1
 
-extern "C" {
-  #include <stdio.h>
-}
 #include <type_traits>
 #include <typeinfo>  //for typeid
 
-enum class IgnoreParameter { YES };
+extern "C" {
+  #include <stdio.h>
+}
 
-extern const char* const fundamentalTypeName(const char* const typeIdName );
+// Eventually move what's needed into mock support class
+void printTypeIds();
+const char* const fundamentalTypeName(const char* const typeIdName );
+
+enum class IgnoreParameter { YES };
 
 
 template<typename BaseType>
