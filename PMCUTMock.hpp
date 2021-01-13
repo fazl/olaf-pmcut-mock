@@ -1,8 +1,9 @@
 #ifndef PM_MOCK_H
 #define PM_MOCK_H 1
 
-#include <type_traits>
-#include <typeinfo>  //for typeid
+// #include <type_traits>
+// #include <typeinfo>  //for typeid
+#include "TypeWrapper.hpp"
 
 extern "C" {
   #include <stdio.h>
@@ -75,7 +76,6 @@ class PoorMansCppUTestMock
     void clear(void);
     void checkExpectations(void);
 
-
     // Record no-arg function calls
     static void callVoid(const char* const fName){
       printf("\t\tIn: PMCUTMock::callVoid() TODO record noargs func '%s' was called\n", fName);
@@ -85,7 +85,8 @@ class PoorMansCppUTestMock
       retType retVal;
       printf(
         "\t\tIn: PMCUTMock::callNonVoid() TODO record noargs func '%s' was called, returning a %s=%lu\n",
-        fName, fundamentalType(typeid(retType).name()), retVal );
+        fName, TypeWrapper<retType>::name.c_str(), retVal );
+//      fName, fundamentalType(typeid(retType).name()), retVal );
       return retVal;
     }
 
