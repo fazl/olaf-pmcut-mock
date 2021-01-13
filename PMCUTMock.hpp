@@ -8,10 +8,6 @@ extern "C" {
   #include <stdio.h>
 }
 
-// Eventually move what's needed into mock support class
-void printTypeIds();
-const char* const fundamentalTypeName(const char* const typeIdName );
-
 enum class IgnoreParameter { YES };
 
 
@@ -67,13 +63,18 @@ private:
 class PoorMansCppUTestMock
 {
   private:
+    static const char* const fundamentalType(const char* const typeIdName );
     //struct that represents expectations for all fns in poorMansCppuTestMockFnDef
     void expectNoCall (const char * const fnName) { this->expectNCalls(0, fnName ); }  // today it's public
     void expectOneCall(const char * const fnName) { this->expectNCalls(1, fnName); }
     void expectNCalls (const int count, const char * const fnName) { /*TBD;*/ }
+
     public:
-      void clear(void);
+    static void printTypeIds(); //scaffolding
+
+    void clear(void);
     void checkExpectations(void);
+
 
     // Record no-arg function calls
     static void callVoid(const char* const fName){
@@ -84,7 +85,7 @@ class PoorMansCppUTestMock
       retType retVal;
       printf(
         "\t\tIn: PMCUTMock::callNonVoid() TODO record noargs func '%s' was called, returning a %s=%lu\n",
-        fName, fundamentalTypeName(typeid(retType).name()), retVal );
+        fName, fundamentalType(typeid(retType).name()), retVal );
       return retVal;
     }
 

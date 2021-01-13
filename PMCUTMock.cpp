@@ -56,16 +56,13 @@ static const dict_t c99Types2Names = {
 
 static dict_t reverseLookup(const dict_t dict){
   dict_t reversed;
-  for(dict_t::const_iterator i = dict.begin(); i != dict.end(); ++i){
-    const char* const key = i->first;
-    const char* const value = i->second;
-    
-    if(0 != reversed.count(value)){
-      printf("Duplicate typeid name; trying to insert name: '%s' ", value);
+  for(dict_t::const_iterator i = dict.begin(); i != dict.end(); ++i){    
+    if(0 == reversed.count(i->second)){
+      reversed.insert(std::make_pair(i->second,i->first));
+    }else{
+      printf("Duplicate typeid name; trying to insert name: '%s' ", i->second);
       throw "Error: please fix.";
     }
-
-    reversed.insert(std::make_pair(value,key));
   }
   return reversed;
 }
@@ -73,11 +70,11 @@ static dict_t reverseLookup(const dict_t dict){
 static const dict_t c99Names2Types = reverseLookup(c99Types2Names);
 
 
-const char* const fundamentalTypeName(const char* const typeIdName ){
+const char* const PoorMansCppUTestMock::fundamentalType(const char* const typeIdName ){
   return c99Names2Types.at(typeIdName);
 }
 
-void printTypeIds(){
+void PoorMansCppUTestMock::printTypeIds(){
   printf("---------------------------------------\n");
   for(dict_t::const_iterator i = c99Names2Types.begin(); i != c99Names2Types.end(); ++i){
     printf("typeid(..).name() %s represents type: %s \n", i->first, i->second );
@@ -88,7 +85,7 @@ void printTypeIds(){
     const char* const typeIdName = i->second;
     
     printf("typeid(..).name() of %-14s -like %-14s- is %s, \n",
-           arithType, fundamentalTypeName(typeIdName), typeIdName );
+           arithType, fundamentalType(typeIdName), typeIdName );
   }
   printf("---------------------------------------\n");
 }

@@ -60,7 +60,7 @@ static const struct
 */
 int main(void){
 
-  printTypeIds();
+  PoorMansCppUTestMock::printTypeIds();
 
   printf( "Unit test of module Foo while mocking out module Bar\n" );
 
