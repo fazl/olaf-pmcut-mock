@@ -6,7 +6,9 @@
 
 typedef std::map<const char* const,const char* const> dict_t;
 
-#define GENPAIR(x) { #x, typeid(x).name() }
+#define GENPAIR(x)\
+{ #x, typeid(x).name() },\
+{ #x "*", typeid(x *).name() }
 
 // Lookup table maps C types to C++ typeid name
 // Hoping this will allow us to discriminate types
@@ -84,7 +86,7 @@ void PoorMansCppUTestMock::printTypeIds(){
     const char* const arithType = i->first;
     const char* const typeIdName = i->second;
     
-    printf("typeid(..).name() of %-14s -like %-14s- is %s, \n",
+    printf("typeid(..).name() of %-15s -like %-15s- is %s, \n",
            arithType, fundamentalType(typeIdName), typeIdName );
   }
   printf("---------------------------------------\n");
