@@ -4,11 +4,14 @@
 
 #include <stdint.h>
 
-// Takes nothing, returns calculated value
+// Takes and returns nothing
 void Bar_vDoBar0( void );
 
 // Takes nothing, returns calculated value
 uint32_t Bar_u32DoBar0( void );
 
+char*    Bar_pcDoBar0( void );
+
+// TODO: add functions that take args
 
 #endif //BAR_H

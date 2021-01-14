@@ -14,3 +14,7 @@ uint32_t Bar_u32DoBar0(void){
 	return 42u;
 }
 
+char* Bar_pcDoBar0(void){
+	printf("In: (real) char* Bar_pcDoBar0(void) and returning \"Bar!\"\n");
+	return "Bar!";
+}
