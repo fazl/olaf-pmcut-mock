@@ -13,7 +13,13 @@ void Foo_vDoFoo0(void){
 // Takes 1 arg, depends on Bar module
 uint32_t Foo_u32DoFoo1( uint32_t u32Arg1 ){
 	printf("In: (real) uint32_t Foo_u32DoFoo1(uint32_t=%u)\n", u32Arg1);
-	printf("..and calling Bar_u32DoBar0(void)\n");
+
+	
+	printf("..and calling Bar_pcDoBar0(void)\n");
+	char* pc = Bar_pcDoBar0();
+	printf("..which returned (char*)=%0xlu", (unsigned long)pc);
+
+	printf("..and next, calling Bar_u32DoBar0(void)\n");
 	uint32_t ret = Bar_u32DoBar0();
 	printf("..and returning %u\n", ret);
 	return ret;

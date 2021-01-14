@@ -26,13 +26,21 @@ extern "C"{
     return ret;
   }
 
+  // Mocked Function from module Bar
+  char* Bar_pcDoBar0( void ){
+    printf("\tIn: (mock) char* Bar_u32DoBar0(void), registering call with mocklib..\n");
+    char* ret = PoorMansCppUTestMock::callNonVoid<char*>("Bar_pcDoBar0");
+    printf("\t..mock returning 0x%x\n", ret);
+    return ret;
+  }
 }
 
 /*
 // example of cpputest mock api usage from (therapy tests TfnDoserMock.cpp):
     mock().actualCall(__func__).withIntParameter("u32Now", u32Now)
                                 .withUnsignedIntParameter("tRequestedAmount",tRequestedAmount)
-                                .withUnsignedIntParameter("u32DurationSecs",u32DurationSecs);
+                                .withUnsignedIntParameter("u32DurationSecs",u32DurationSecs)
+                                .returning....;
 
 
 // Note the API example shown below differs from the existing cpputest mock api example above
@@ -40,7 +48,7 @@ extern "C" void ErrorHandler_vSetFatalError(ErrorHandler_FATAL_ERRTYPE_t tFatatl
                                             ErrorHandler_FATAL_ERROR_t eError,
                       uint32_t u32CodePointId)
 {
-    // option 1: return PoorMansCppuTestMock::callNonVoid("ErrorHandler_vSetFatalError", tFatatlErrType, eError, u32CodePointId)
+  // option 1: return PoorMansCppuTestMock::callNonVoid("ErrorHandler_vSetFatalError", tFatatlErrType, eError, u32CodePointId)
   // option 2: PoorMansCppuTestMock::callVoid("ErrorHandler_vSetFatalError", tFatatlErrType, eError, u32CodePointId)
   // option 3: throw ...
 }
@@ -78,7 +86,7 @@ int main(void){
   printf( "Calling Foo_u32DoFoo1(123u).. \n" );
   uint32_t ret = Foo_u32DoFoo1(123u);
   printf( "Got %u\n", ret );
-
+  
 //  mock().checkExpectations();
 
 
