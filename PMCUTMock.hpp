@@ -80,8 +80,12 @@ class PoorMansCppUTestMock
     static void callVoid(const char* const fName){
       printf("\t\tIn: PMCUTMock::callVoid() TODO record noargs func '%s' was called\n", fName);
     }
+    // TODO figure out how return values used in tests
+    // TODO try to hide the complexity
+    // TODO how to avoid dynamic allocation during main runtime
+    // 
     template <typename retType>
-    static retType callNonVoid(const char* const fName){
+    static retType callNonVoid(const char* const fName){ //Danger Will Robinson! Cannot overload on return types.
       retType retVal;
       printf(
         "\t\tIn: PMCUTMock::callNonVoid() TODO record noargs func '%s' was called, returning a %s=%lu\n",
