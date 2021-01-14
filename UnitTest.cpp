@@ -14,6 +14,8 @@ extern "C" {
 // -------------
 
 
+// Conceptually,  part of the 'PREPARE' and 'ASSERT' phases of a test
+//
 extern "C"{
 
   // Mocked Function from module Bar
@@ -27,6 +29,13 @@ extern "C"{
 }
 
 /*
+// example of cpputest mock api usage from (therapy tests TfnDoserMock.cpp):
+    mock().actualCall(__func__).withIntParameter("u32Now", u32Now)
+                                .withUnsignedIntParameter("tRequestedAmount",tRequestedAmount)
+                                .withUnsignedIntParameter("u32DurationSecs",u32DurationSecs);
+
+
+// Note the API example shown below differs from the existing cpputest mock api example above
 extern "C" void ErrorHandler_vSetFatalError(ErrorHandler_FATAL_ERRTYPE_t tFatatlErrType,
                                             ErrorHandler_FATAL_ERROR_t eError,
                       uint32_t u32CodePointId)
@@ -69,6 +78,9 @@ int main(void){
   printf( "Calling Foo_u32DoFoo1(123u).. \n" );
   uint32_t ret = Foo_u32DoFoo1(123u);
   printf( "Got %u\n", ret );
+
+//  mock().checkExpectations();
+
 
   return 0;
 
