@@ -83,13 +83,14 @@ class PoorMansCppUTestMock
     // TODO figure out how return values used in tests
     // TODO try to hide the complexity
     // TODO how to avoid dynamic allocation during main runtime
+    // I thought we cannot overload on return types - but it seems to work!
     // 
     template <typename retType>
     static retType callNonVoid(const char* const fName){ //Danger Will Robinson! Cannot overload on return types.
       retType retVal;
       printf(
-        "\t\tIn: PMCUTMock::callNonVoid() TODO record noargs func '%s' was called, returning a %s=%lu\n",
-        fName, TypeWrapper<retType>::name.c_str(), retVal );
+        "\t\tIn: '%s PMCUTMock::callNonVoid(\"%s\")': TODO record noargs func '%s' was called, returning a %s=%lu\n",
+        TypeWrapper<retType>::name.c_str(), fName, fName, TypeWrapper<retType>::name.c_str(), retVal );
 //      fName, fundamentalType(typeid(retType).name()), retVal );
       return retVal;
     }
