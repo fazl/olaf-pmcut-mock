@@ -23,37 +23,7 @@ static const dict_t c99Types2Names = {
   GENPAIR(int),
   GENPAIR(unsigned int),
   GENPAIR(long),
-  GENPAIR(unsigned long),
-  // Signed intX_t types
-  // GENPAIR(int8_t),
-  // GENPAIR(int16_t),
-  // GENPAIR(int32_t),
-  // GENPAIR(int64_t),
-  // GENPAIR(int_fast8_t),
-  // GENPAIR(int_fast16_t),
-  // GENPAIR(int_fast32_t),
-  // GENPAIR(int_fast64_t),
-  // GENPAIR(int_least8_t),
-  // GENPAIR(int_least16_t),
-  // GENPAIR(int_least32_t),
-  // GENPAIR(int_least64_t),
-  // GENPAIR(intmax_t),
-  // GENPAIR(intptr_t),
-  // Unsigned uintX_t types
-  // GENPAIR(uint8_t),
-  // GENPAIR(uint16_t),
-  // GENPAIR(uint32_t),
-  // GENPAIR(uint64_t),
-  // GENPAIR(uint_fast8_t),
-  // GENPAIR(uint_fast16_t),
-  // GENPAIR(uint_fast32_t),
-  // GENPAIR(uint_fast64_t),
-  // GENPAIR(uint_least8_t),
-  // GENPAIR(uint_least16_t),
-  // GENPAIR(uint_least32_t),
-  // GENPAIR(uint_least64_t),
-  // GENPAIR(uintmax_t),
-  // GENPAIR(uintptr_t)
+  GENPAIR(unsigned long)
 };
 
 static dict_t reverseLookup(const dict_t dict){
