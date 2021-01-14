@@ -2,7 +2,9 @@
 
 #include <string>
 
-#define SPECIALISE( x ) const std::string TypeWrapper<x>::name = #x ;
+#define SPECIALISE( x ) \
+const std::string TypeWrapper<x  >::name = #x ;\
+const std::string TypeWrapper<x *>::name = #x "*";
 
 // const std::string TypeWrapper<char>::name = "char";
 

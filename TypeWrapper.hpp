@@ -14,8 +14,9 @@ template <typename T> struct TypeWrapper {
 };
 
 
-#define SPECIALWRAPPER( x ) template <> \
-struct TypeWrapper<x>{ static const std::string name;};
+#define SPECIALWRAPPER( x ) \
+template <> struct TypeWrapper<x  >{ static const std::string name;};\
+template <> struct TypeWrapper<x *>{ static const std::string name;};
 // Specialisations for intrinsic types
 //
 // e.g.
