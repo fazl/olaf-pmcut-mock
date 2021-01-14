@@ -89,9 +89,9 @@ class PoorMansCppUTestMock
     static retType callNonVoid(const char* const fName){ //Danger Will Robinson! Cannot overload on return types.
       retType retVal;
       printf(
-        "\t\tIn: '%s PMCUTMock::callNonVoid(\"%s\")': TODO record noargs func '%s' was called, returning a %s=%lu\n",
+        "\t\tIn: '%15s PMCUTMock::callNonVoid(\"%s\")': TODO record noargs func '%s' was called, returning a %s=%lu\n",
         TypeWrapper<retType>::name.c_str(), fName, fName, TypeWrapper<retType>::name.c_str(), retVal );
-//      fName, fundamentalType(typeid(retType).name()), retVal );
+//      fundamentalType(typeid(retType).name())
       return retVal;
     }
 
