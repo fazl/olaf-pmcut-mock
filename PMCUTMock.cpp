@@ -42,7 +42,7 @@ static dict_t reverseLookup(const dict_t dict){
 static const dict_t c99Names2Types = reverseLookup(c99Types2Names);
 
 
-const char* const PoorMansCppUTestMock::fundamentalType(const char* const typeIdName ){
+const char* const PoorMansCppUTestMock::basicType(const char* const typeIdName ){
   return c99Names2Types.at(typeIdName);
 }
 
@@ -57,7 +57,7 @@ void PoorMansCppUTestMock::printTypeIds(){
     const char* const typeIdName = i->second;
     
     printf("typeid(..).name() of %-15s -like %-15s- is %s, \n",
-           arithType, fundamentalType(typeIdName), typeIdName );
+           arithType, basicType(typeIdName), typeIdName );
   }
   printf("---------------------------------------\n");
 }

@@ -64,7 +64,7 @@ private:
 class PoorMansCppUTestMock
 {
   private:
-    static const char* const fundamentalType(const char* const typeIdName );
+    static const char* const basicType(const char* const typeIdName );
     //struct that represents expectations for all fns in poorMansCppuTestMockFnDef
     void expectNoCall (const char * const fnName) { this->expectNCalls(0, fnName ); }  // today it's public
     void expectOneCall(const char * const fnName) { this->expectNCalls(1, fnName); }
@@ -90,8 +90,8 @@ class PoorMansCppUTestMock
       retType retVal;
       printf(
         "\t\tIn: '%15s PMCUTMock::callNonVoid(\"%s\")': TODO record noargs func '%s' was called, returning a %s=%lu\n",
-        TypeWrapper<retType>::name.c_str(), fName, fName, TypeWrapper<retType>::name.c_str(), retVal );
-//      fundamentalType(typeid(retType).name())
+        TypeWrapper<retType>::name.c_str(), fName, fName, TypeWrapper<retType>::name.c_str(), retVal ); // or basicType(typeid(retType).name())
+
       return retVal;
     }
 
