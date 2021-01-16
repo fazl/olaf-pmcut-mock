@@ -1,5 +1,5 @@
 #!/bin/sh
 
 
-rm *.o *.exe
-
+rm build/* 2>/dev/null
+rmdir build 2>/dev/null
