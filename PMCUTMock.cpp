@@ -1,8 +1,11 @@
 #include "PMCUTMock.hpp"
 
+#include <cstring>
 #include <map>
 #include <string>
 #include <utility> // make_pair
+
+char acFormat[256];
 
 typedef std::map<const char* const,const char* const> dict_t;
 
@@ -23,7 +26,8 @@ static const dict_t c99Types2Names = {
   GENPAIR(int),
   GENPAIR(unsigned int),
   GENPAIR(long),
-  GENPAIR(unsigned long)
+  GENPAIR(unsigned long),
+  GENPAIR(void),
 };
 
 static dict_t reverseLookup(const dict_t dict){
@@ -45,6 +49,40 @@ static const dict_t c99Names2Types = reverseLookup(c99Types2Names);
 const char* const PoorMansCppUTestMock::basicType(const char* const typeIdName ){
   return c99Names2Types.at(typeIdName);
 }
+bool PoorMansCppUTestMock::isLongType(const char* const typeIdName ){
+  return nullptr != strstr(c99Names2Types.at(typeIdName), "long");
+}
+bool PoorMansCppUTestMock::isPtrType(const char* const typeIdName ){
+  return nullptr != strstr(c99Names2Types.at(typeIdName), "*");
+}
+bool PoorMansCppUTestMock::isStringType(const char* const typeIdName ){
+  return nullptr != strstr(c99Names2Types.at(typeIdName), "char*");
+}
+bool PoorMansCppUTestMock::isUnsignedType(const char* const typeIdName ){
+  return nullptr != strstr(c99Names2Types.at(typeIdName), "unsigned");
+}
+// From typeid().name() deduce whether the type is a string, other pointer, or
+// basic integral type and return the respective printf format string (%s, 0x%p, or %lu)
+const char* const PoorMansCppUTestMock::mapTypeIdNameToPrintFmt(const char* const retTypeIdName){
+  if( isStringType(retTypeIdName) ){
+    printf( "\t\tString " ); 
+    return "'%s'";
+  }else if(isPtrType(retTypeIdName)){
+    printf( "\t\tPtr   "); 
+    return "0x%p";
+  }else{
+    printf( "\t\tIntegral "); 
+    static char acBuf[]={'%',0,0,0};
+    int nextIdx = 1;
+    if(isLongType(retTypeIdName)){
+        acBuf[nextIdx++] = 'l';
+    }
+    acBuf[nextIdx++] = isUnsignedType(retTypeIdName) ? 'u' : 'd';
+    return acBuf;
+  }
+}
+
+
 
 void PoorMansCppUTestMock::printTypeIds(){
   printf("---------------------------------------\n");

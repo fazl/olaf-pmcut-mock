@@ -9,6 +9,7 @@ extern "C" {
   #include <stdio.h>
 }
 
+char acHello[] = "hello world";
 
 // HAND WRITTEN
 // -------------
@@ -18,19 +19,30 @@ extern "C" {
 //
 extern "C"{
 
-  // Mocked Function from module Bar
+  // Mocked Functions from module Bar using Variadic API
+  // API callNonVoidVariadic() expects args: function name, retVal,  args if any
+  // Signature (return and args types) deduced by variadic template mechanism
+  // which sadly needs the variadic part last i.e. return type must precede args.
   uint32_t Bar_u32DoBar0( void ){
-    printf("\tIn: (mock) uint32_t Bar_u32DoBar0(void), registering call with mocklib..\n");
-    uint32_t ret = PoorMansCppUTestMock::callNonVoid<uint32_t>("Bar_u32DoBar0");
+    printf("\tIn: (mock) uint32_t Bar_u32DoBar0(void), register call with mocklib, to return '%u'\n", 42u);
+    uint32_t ret = PoorMansCppUTestMock::callNonVoidVariadic("Bar_u32DoBar0", 42u );
     printf("\t..mock returning %u\n", ret);
     return ret;
   }
 
-  // Mocked Function from module Bar
   char* Bar_pcDoBar0( void ){
-    printf("\tIn: (mock) char* Bar_u32DoBar0(void), registering call with mocklib..\n");
-    char* ret = PoorMansCppUTestMock::callNonVoid<char*>("Bar_pcDoBar0");
-    printf("\t..mock returning 0x%x\n", ret);
+    printf("\tIn: (mock) char* Bar_pcDoBar0(void), register call with mocklib, to return '%s'\n", acHello);
+    // Expects args: function name, retVal, args
+    char* ret = PoorMansCppUTestMock::callNonVoidVariadic("Bar_pcDoBar0", acHello);
+    printf("\t..mock returning '%s'\n", ret);
+    return ret;
+  }
+
+  void* Bar_pvDoBar3( char* strArg0, int32_t i32Arg1, uint32_t u32Arg3 ){
+    printf("\tIn: (mock) char* Bar_pvDoBar3(char*,i32,u32), registering call with mocklib..\n");
+    // Expects args:                                       function name, retVal,            args 
+    void* ret = PoorMansCppUTestMock::callNonVoidVariadic("Bar_pvDoBar3", (void*)0xdeadbeef, strArg0, i32Arg1, u32Arg3 );
+    printf("\t..mock returning 0x%p\n", ret);
     return ret;
   }
 }
@@ -75,9 +87,11 @@ static const struct
 };
 
 */
-int main(void){
+int main(int argc, char** argv){
 
-  PoorMansCppUTestMock::printTypeIds();
+  if( 1<argc){
+    PoorMansCppUTestMock::printTypeIds();
+  }
 
   printf( "Unit test of module Foo while mocking out module Bar\n" );
 

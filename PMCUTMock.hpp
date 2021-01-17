@@ -1,13 +1,18 @@
 #ifndef PM_MOCK_H
 #define PM_MOCK_H 1
 
-// #include <type_traits>
+// TODO review for need to cover noexcept/ref-qualifiers/cv-qualifiers
+
+#include <type_traits>
 // #include <typeinfo>  //for typeid
 #include "TypeWrapper.hpp"
 
 extern "C" {
+  #include <assert.h>
   #include <stdio.h>
 }
+
+extern char acFormat[256];
 
 enum class IgnoreParameter { YES };
 
@@ -65,6 +70,15 @@ class PoorMansCppUTestMock
 {
   private:
     static const char* const basicType(const char* const typeIdName );
+    static bool isLongType(const char* const typeIdName );
+    static bool isPtrType(const char* const typeIdName );
+    static bool isStringType(const char* const typeIdName );
+    static bool isUnsignedType(const char* const typeIdName );
+
+    // From typeid().name() deduce whether the type is a string, other pointer, or
+    // basic integral type and return the respective printf format string (%s, 0x%p, or %lu)
+    static const char* const mapTypeIdNameToPrintFmt(const char* const retTypeIdName);
+
     //struct that represents expectations for all fns in poorMansCppuTestMockFnDef
     void expectNoCall (const char * const fnName) { this->expectNCalls(0, fnName ); }  // today it's public
     void expectOneCall(const char * const fnName) { this->expectNCalls(1, fnName); }
@@ -85,16 +99,46 @@ class PoorMansCppUTestMock
     // TODO how to avoid dynamic allocation during main runtime
     // I thought we cannot overload on return types - but it seems to work!
     // 
-    template <typename retType>
-    static retType callNonVoid(const char* const fName){ //Danger Will Robinson! Cannot overload on return types.
-      retType retVal;
-      printf(
-        "\t\tIn: '%15s PMCUTMock::callNonVoid(\"%s\")': TODO record noargs func '%s' was called, returning a %s=%lu\n",
-        TypeWrapper<retType>::name.c_str(), fName, fName, TypeWrapper<retType>::name.c_str(), retVal ); // or basicType(typeid(retType).name())
+    // template <typename retType>
+    // static retType callNonVoid(const char* const fName){
+    //   retType retVal;
+    //   printf(
+    //     "\t\tIn: '%15s PMCUTMock::callNonVoid(\"%s\")': TODO record noargs func '%s' was called, returning a %s=%lu\n",
+    //     TypeWrapper<retType>::name.c_str(), fName, fName, TypeWrapper<retType>::name.c_str(), retVal ); // or basicType(typeid(retType).name())
+
+    //   return retVal;
+    // }
+
+    // On variadic functions arguments https://en.cppreference.com/w/cpp/language/parameter_pack
+    // Note: a lot of this cruft is scaffolding just to catch if I mess up the type handling and
+    // can hopefully be deleted once it's settled down a bit..
+    //
+    template <typename retType, typename... ArgTypes>
+    static retType callNonVoidVariadic(const char* const fName, retType retVal, ArgTypes... args){
+      const char* const retTypeIdName = typeid(retType).name();
+      const char* const retTypeName = basicType(retTypeIdName); // or TypeWrapper<retType>::name.c_str(); 
+
+      // At end of fmt, use numeric %lu for numeric result, %s for string, %p for pointer. 
+      // Probly need cast to void* for latter.
+      const char* const pcRetFmt = mapTypeIdNameToPrintFmt(retTypeIdName);
+      printf( "return type %s needs format '%s'\n", basicType(retTypeIdName), pcRetFmt ); 
+
+      int count=snprintf(acFormat, sizeof acFormat, "%s=%s\n",
+        "\t\tIn: '%15s PMCUTMock::callNonVoidVariadic()': TODO record call to %d-args func '%s', returning a %s", 
+        pcRetFmt
+      );
+      if( count<0 || sizeof acFormat <= count ){
+        printf("!!ERROR building fmt string!! count (%d) <0 || sizeof acFormat (%u) <= count (%d) ", count, sizeof acFormat, count);
+        assert(!"Maybe try a large buffer for acFormat?");
+      }
+
+      // printf("Built acFormat '%s'\n", acFormat);
+      
+      printf( acFormat,  retTypeName, sizeof...(args), fName, retTypeName, retVal ); 
+
 
       return retVal;
     }
-
 
 };
 
