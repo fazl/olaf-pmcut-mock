@@ -27,6 +27,7 @@ SPECIALISE(int)
 SPECIALISE(unsigned int)
 SPECIALISE(long)
 SPECIALISE(unsigned long)
+SPECIALISE(void)
 
 // SPECIALISE(const char)
 /*

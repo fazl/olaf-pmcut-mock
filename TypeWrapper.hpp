@@ -36,6 +36,7 @@ SPECIALWRAPPER(int)
 SPECIALWRAPPER(unsigned int)
 SPECIALWRAPPER(long)
 SPECIALWRAPPER(unsigned long)
+SPECIALWRAPPER(void)
 
 // SPECIALWRAPPER(const char) // can discriminate on const
 /*
