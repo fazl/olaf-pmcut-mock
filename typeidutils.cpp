@@ -11,12 +11,15 @@ typedef std::map<const char* const,const char* const> dict_t;
 
 #define GENPAIRS(x)\
 { #x, typeid(x).name() },\
-{ #x "*", typeid(x *).name() }
+{ #x "*", typeid(x *).name() },\
+{ "const " #x "*", typeid(const x *).name() }
 
 // Lookup table maps C types to C++ typeid name
 // to allow us to discriminate types at runtime.
-// Note: typeid of const T and T are same (see  
-// https://en.cppreference.com/w/cpp/language/typeid)
+// Note: https://en.cppreference.com/w/cpp/language/typeid) claims
+// that typeid of const T and T are same, however 
+// char* maps to Pc, but
+// const char* maps to PKc !!
 //
 // From this we build reverse direction map.
 static const dict_t c99Types2Names = {
@@ -48,8 +51,17 @@ static dict_t reverseLookup(const dict_t dict){
 }
 static const dict_t c99Names2Types = reverseLookup(c99Types2Names);
 
+
+//-----------------------------------------------------------------------------
+// const dict_t forceTypeDictInit(){
+//     return c99Names2Types;
+// }
 //-----------------------------------------------------------------------------
 const char* const basicType(const char* const typeIdName ){
+    // uncomment if map lookup throws out_of_range
+    //   printf("Lookup basic type for shortcode: %s in dict c99Names2Types of size: %d\n", 
+    //        typeIdName, c99Names2Types.size()); 
+    //   fflush(0);
   return c99Names2Types.at(typeIdName);
 }
 
