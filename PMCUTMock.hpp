@@ -13,6 +13,7 @@ extern "C" {
 }
 
 extern char acFormat[256];
+void concatAcFormat(const char* const preBlah, const char* const pcRetFmt);
 
 enum class IgnoreParameter { YES };
 
@@ -123,14 +124,9 @@ class PoorMansCppUTestMock
       const char* const pcRetFmt = mapTypeIdNameToPrintFmt(retTypeIdName);
       printf( "return type %s needs format '%s'\n", basicType(retTypeIdName), pcRetFmt ); 
 
-      int count=snprintf(acFormat, sizeof acFormat, "%s=%s\n",
+      concatAcFormat( 
         "\t\tIn: '%15s PMCUTMock::callNonVoidVariadic()': TODO record call to %d-args func '%s', returning a %s", 
-        pcRetFmt
-      );
-      if( count<0 || sizeof acFormat <= count ){
-        printf("!!ERROR building fmt string!! count (%d) <0 || sizeof acFormat (%u) <= count (%d) ", count, sizeof acFormat, count);
-        assert(!"Maybe try a large buffer for acFormat?");
-      }
+        pcRetFmt);
 
       // printf("Built acFormat '%s'\n", acFormat);
       
