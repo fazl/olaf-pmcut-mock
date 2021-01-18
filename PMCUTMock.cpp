@@ -80,7 +80,7 @@ const char* const PoorMansCppUTestMock::mapTypeIdNameToPrintFmt(const char* cons
     return "'%s'";
   }else if(isPtrType(retTypeIdName)){
     printf( "\t\tPtr   "); 
-    return "0x%p";
+    return "%p";
   }else{
     printf( "\t\tIntegral "); 
     static char acBuf[]={'%',0,0,0};

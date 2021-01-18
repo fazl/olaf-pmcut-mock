@@ -42,7 +42,7 @@ extern "C"{
     printf("\tIn: (mock) char* Bar_pvDoBar3(char*,i32,u32), registering call with mocklib..\n");
     // Expects args:                                       function name, retVal,            args 
     void* ret = PoorMansCppUTestMock::callNonVoidVariadic("Bar_pvDoBar3", (void*)0xdeadbeef, strArg0, i32Arg1, u32Arg3 );
-    printf("\t..mock returning 0x%p\n", ret);
+    printf("\t..mock returning %p\n", ret);
     return ret;
   }
 }
@@ -111,7 +111,7 @@ int main(int argc, char** argv){
 
   
   // ACT
-  
+
   printf( "Calling Foo_u32DoFoo1(123u).. \n" );
   uint32_t ret = Foo_u32DoFoo1(123u);
   printf( "Got %u\n", ret );
