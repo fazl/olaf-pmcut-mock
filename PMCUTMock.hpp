@@ -10,11 +10,10 @@
 // Library includes
 #include <cassert>
 #include <cstdio>
-#include <type_traits>
 #include <typeinfo>
 
 extern char acFormat[256];
-void concatAcFormat(const char* const preBlah, const char* const pcRetFmt);
+const char* const concatAcFormat(const char* const preBlah, const char* const pcRetFmt);
 
 class PoorMansCppUTestMock
 {
@@ -68,6 +67,8 @@ class PoorMansCppUTestMock
 
       // Record actual call details
       
+      // Note : if std::tuple doesn't suit, try https://www.stroustrup.com/C++11FAQ.html#variadic-templates
+      // (Looks like Lisp Programming during Compilation of C++ ! LOL)
       // Simple idea:  map the name to an arg list and return value?
       // Something like: actualCallsMap
       // Key:     name of function

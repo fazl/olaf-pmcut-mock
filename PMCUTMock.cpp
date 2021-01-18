@@ -5,7 +5,7 @@
 #include <utility> // make_pair
 
 char acFormat[256];
-void concatAcFormat(const char* const pre, const char* const pcRetFmt){
+const char* const concatAcFormat(const char* const pre, const char* const pcRetFmt){
       int count=snprintf(acFormat, sizeof acFormat, "%s=%s\n", pre, pcRetFmt  );
       if( count<0 || sizeof acFormat <= count ){
         printf(
@@ -13,6 +13,7 @@ void concatAcFormat(const char* const pre, const char* const pcRetFmt){
           count, sizeof acFormat, count);
         assert(!"Try a larger buffer for acFormat?");
       }
+      return acFormat;
 }
 
 
