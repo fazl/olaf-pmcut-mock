@@ -1,3 +1,4 @@
 build/
 hide/
 UnitTest.exe.stackdump
+.vscode/settings.json
