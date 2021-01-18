@@ -3,91 +3,28 @@
 
 // TODO review for need to cover noexcept/ref-qualifiers/cv-qualifiers
 
-#include <type_traits>
-#include <typeinfo>  //for typeid
-// #include "TypeWrapper.hpp"
+// Other module includes
+#include "Parameter.hpp"
+#include "typeidutils.hpp"
 
-extern "C" {
-  #include <assert.h>
-  #include <stdio.h>
-}
+// Library includes
+#include <cassert>
+#include <cstdio>
+#include <type_traits>
+#include <typeinfo>
 
 extern char acFormat[256];
 void concatAcFormat(const char* const preBlah, const char* const pcRetFmt);
 
-enum class IgnoreParameter { YES };
-
-
-template<typename BaseType>
-class Parameter {
-public:
-    /**
-     * Constructor for non-ignored parameters.
-     * @param value [in] Value of the parameter
-     */
-    Parameter(const BaseType &value) : m_value(&value), m_isIgnored(false) {}
-
-    /**
-     * Constructor for ignored parameters.
-     *
-     * The actual value of the passed parameter is ignored.
-     */
-    Parameter(IgnoreParameter) : m_value(nullptr),  m_isIgnored(true) {}
-
-    /**
-     * Returns the parameter value.
-     * @return Parameter value
-     */
-    const BaseType& getValue()
-    {
-        return *m_value;
-    }
-
-    /**
-     * Returns the parameter value.
-     * @return Parameter value
-     */
-    const BaseType& getPointerValue()
-    {
-        return m_value;
-    }
-
-    /**
-     * Indicates if the parameter is ignored.
-     * @return @c true if the parameter is ignored, @c false otherwise
-     */
-    bool isIgnored()
-    {
-        return m_isIgnored;
-    }
-
-
-private:
-    typename std::remove_reference<const BaseType>::type *m_value;
-    bool m_isIgnored;
-};
-
 class PoorMansCppUTestMock
 {
   private:
-    static const char* const basicType(const char* const typeIdName );
-    static bool isLongType(const char* const typeIdName );
-    static bool isPtrType(const char* const typeIdName );
-    static bool isStringType(const char* const typeIdName );
-    static bool isUnsignedType(const char* const typeIdName );
-
-    // From typeid().name() deduce whether the type is a string, other pointer, or
-    // basic integral type and return the respective printf format string (%s, 0x%p, or %lu)
-    static const char* const mapTypeIdNameToPrintFmt(const char* const retTypeIdName);
-
     //struct that represents expectations for all fns in poorMansCppuTestMockFnDef
     void expectNoCall (const char * const fnName) { this->expectNCalls(0, fnName ); }  // today it's public
     void expectOneCall(const char * const fnName) { this->expectNCalls(1, fnName); }
     void expectNCalls (const int count, const char * const fnName) { /*TBD;*/ }
 
     public:
-    static void printTypeIds(); //scaffolding
-
     void clear(void);
     void checkExpectations(void);
 
@@ -100,12 +37,12 @@ class PoorMansCppUTestMock
     // TODO how to avoid dynamic allocation during main runtime
     // I thought we cannot overload on return types - but it seems to work!
     // 
-    // template <typename retType>
-    // static retType callNonVoid(const char* const fName){
-    //   retType retVal;
+    // template <typename RetType>
+    // static RetType callNonVoid(const char* const fName){
+    //   RetType retVal;
     //   printf(
     //     "\t\tIn: '%15s PMCUTMock::callNonVoid(\"%s\")': TODO record noargs func '%s' was called, returning a %s=%lu\n",
-    //     TypeWrapper<retType>::name.c_str(), fName, fName, TypeWrapper<retType>::name.c_str(), retVal ); // or basicType(typeid(retType).name())
+    //     TypeWrapper<RetType>::name.c_str(), fName, fName, TypeWrapper<RetType>::name.c_str(), retVal ); // or basicType(typeid(RetType).name())
 
     //   return retVal;
     // }
@@ -114,10 +51,10 @@ class PoorMansCppUTestMock
     // Note: a lot of this cruft is scaffolding just to catch if I mess up the type handling and
     // can hopefully be deleted once it's settled down a bit..
     //
-    template <typename retType, typename... ArgTypes>
-    static retType callNonVoidVariadic(const char* const fName, retType retVal, ArgTypes... args){
-      const char* const retTypeIdName = typeid(retType).name();
-      const char* const retTypeName = basicType(retTypeIdName); // or TypeWrapper<retType>::name.c_str(); 
+    template <typename RetType, typename... ArgTypes>
+    static RetType callNonVoidVariadic(const char* const fName, RetType retVal, ArgTypes... argVals){
+      const char* const retTypeIdName = typeid(RetType).name();
+      const char* const retTypeName = basicType(retTypeIdName); // or TypeWrapper<RetType>::name.c_str(); 
 
       // At end of fmt, use numeric %lu for numeric result, %s for string, %p for pointer. 
       const char* const pcRetFmt = mapTypeIdNameToPrintFmt(retTypeIdName);
@@ -126,8 +63,8 @@ class PoorMansCppUTestMock
       concatAcFormat( 
         "\t\tIn: '%15s PMCUTMock::callNonVoidVariadic()': TODO record call to %d-args func '%s', returning a %s", 
         pcRetFmt);
-        
-      printf( acFormat,  retTypeName, sizeof...(args), fName, retTypeName, retVal ); 
+
+      printf( acFormat,  retTypeName, sizeof...(argVals), fName, retTypeName, retVal ); 
 
       // Record actual call details
       
@@ -137,6 +74,15 @@ class PoorMansCppUTestMock
       // Looksup: List of name+typed-value pairs (arguments), and return type-value
       // ... ?
       //
+      // actualCallsMap.insert(std::make_pair(fName,std::make_tuple(argVals..)))
+      // Maybe record typeid().name() values for type information, to reduce template bloat?
+
+      // std::map<const char* const, Signature_t> actualCallsMap;
+      // Signature sig(retVal, ...argVals); //Obj can give us typed values (arg names will need more smarts)
+      // actualCallsMap.insert(fname, sig);
+
+  
+  
 
 
       return retVal;

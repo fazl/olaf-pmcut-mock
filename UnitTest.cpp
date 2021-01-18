@@ -2,12 +2,15 @@
 
 // Unit test module Foo and mocking out its dependency, module Bar
 
+// Other module includes
 #include "PMCUTMock.hpp"
 
 extern "C" {
   #include "Foo.h"
-  #include <stdio.h>
 }
+
+// Library includes
+#include <cstdio>
 
 char acHello[] = "hello world";
 
@@ -90,7 +93,7 @@ static const struct
 int main(int argc, char** argv){
 
   if( 1<argc){
-    PoorMansCppUTestMock::printTypeIds();
+    printTypeIds();
   }
 
   printf( "Unit test of module Foo while mocking out module Bar\n" );
