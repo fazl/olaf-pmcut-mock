@@ -120,17 +120,23 @@ class PoorMansCppUTestMock
       const char* const retTypeName = basicType(retTypeIdName); // or TypeWrapper<retType>::name.c_str(); 
 
       // At end of fmt, use numeric %lu for numeric result, %s for string, %p for pointer. 
-      // Probly need cast to void* for latter.
       const char* const pcRetFmt = mapTypeIdNameToPrintFmt(retTypeIdName);
       printf( "return type %s needs format '%s'\n", basicType(retTypeIdName), pcRetFmt ); 
 
       concatAcFormat( 
         "\t\tIn: '%15s PMCUTMock::callNonVoidVariadic()': TODO record call to %d-args func '%s', returning a %s", 
         pcRetFmt);
-
-      // printf("Built acFormat '%s'\n", acFormat);
-      
+        
       printf( acFormat,  retTypeName, sizeof...(args), fName, retTypeName, retVal ); 
+
+      // Record actual call details
+      
+      // Simple idea:  map the name to an arg list and return value?
+      // Something like: actualCallsMap
+      // Key:     name of function
+      // Looksup: List of name+typed-value pairs (arguments), and return type-value
+      // ... ?
+      //
 
 
       return retVal;

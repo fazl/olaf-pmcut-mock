@@ -95,8 +95,23 @@ int main(int argc, char** argv){
 
   printf( "Unit test of module Foo while mocking out module Bar\n" );
 
-  // ACT
+  // Note expected calls to mocked functions
+  // // TODO have to record all supplied args when mock registers 'actual call'
+  //
+  // expect::ErrorHandler_vSetFatalError(ErrorHandler_FATAL_ERRTYPE_FATAL,
+  //                                       ErrorHandler_FATAL_ERROR_PWRCYCLE_SEQUENCE,
+  //                                       IgnoreParameter::YES);
 
+  // // uint32_t 
+  // expect::Bar_u32DoBar0();
+  // //char* 
+  // expect::Bar_pcDoBar0();
+  // //void* 
+  // expect::Bar_pvDoBar3( 'joe bloggs', -1i, 42u ); 
+
+  
+  // ACT
+  
   printf( "Calling Foo_u32DoFoo1(123u).. \n" );
   uint32_t ret = Foo_u32DoFoo1(123u);
   printf( "Got %u\n", ret );
