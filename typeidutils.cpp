@@ -9,27 +9,31 @@
 
 typedef std::map<const char* const,const char* const> dict_t;
 
-#define GENPAIR(x)\
+#define GENPAIRS(x)\
 { #x, typeid(x).name() },\
 { #x "*", typeid(x *).name() }
 
 // Lookup table maps C types to C++ typeid name
-// Hoping this will allow us to discriminate types
-// Still need to build reverse direction map.
+// to allow us to discriminate types at runtime.
+// Note: typeid of const T and T are same (see  
+// https://en.cppreference.com/w/cpp/language/typeid)
+//
+// From this we build reverse direction map.
 static const dict_t c99Types2Names = {
   // Fundamental types
-  GENPAIR(char),
-  GENPAIR(signed char),
-  GENPAIR(unsigned char),
-  GENPAIR(short),
-  GENPAIR(unsigned short),
-  GENPAIR(int),
-  GENPAIR(unsigned int),
-  GENPAIR(long),
-  GENPAIR(unsigned long),
-  GENPAIR(void),
+  GENPAIRS(char),
+  GENPAIRS(signed char),
+  GENPAIRS(unsigned char),
+  GENPAIRS(short),
+  GENPAIRS(unsigned short),
+  GENPAIRS(int),
+  GENPAIRS(unsigned int),
+  GENPAIRS(long),
+  GENPAIRS(unsigned long),
+  GENPAIRS(void),
 };
 
+//-----------------------------------------------------------------------------
 static dict_t reverseLookup(const dict_t dict){
   dict_t reversed;
   for(dict_t::const_iterator i = dict.begin(); i != dict.end(); ++i){    
@@ -42,12 +46,7 @@ static dict_t reverseLookup(const dict_t dict){
   }
   return reversed;
 }
-
 static const dict_t c99Names2Types = reverseLookup(c99Types2Names);
-
-
-
-
 
 //-----------------------------------------------------------------------------
 const char* const basicType(const char* const typeIdName ){
