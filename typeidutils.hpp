@@ -4,8 +4,9 @@
 // Utility funcs to help work with typeid's.
 //
 //The typeid().name() of a C++ type is generally a short code e.g. on cygwin/g++:
-// typeid(char).name() gives i 
-// typeid(char*).name() gives Pi 
+// typeid(char).name() gives c
+// typeid(char*).name() gives Pc
+// typeid(const char*).name() gives PKc
 //
 
    
