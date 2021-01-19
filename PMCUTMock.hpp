@@ -52,12 +52,12 @@ class PoorMansCppUTestMock
     //
     template <typename RetType, typename... ArgTypes>
     static RetType callNonVoidVariadic(const char* const fName, RetType retVal, ArgTypes... argVals){
-      const char* const retTypeIdName = typeid(RetType).name();
-      const char* const retTypeName = basicType(retTypeIdName); // or TypeWrapper<RetType>::name.c_str(); 
+      const char* const retTypeCode = typeid(RetType).name();
+      const char* const retTypeName = basicType(retTypeCode); // or TypeWrapper<RetType>::name.c_str(); 
 
       // At end of fmt, use numeric %lu for numeric result, %s for string, %p for pointer. 
-      const char* const pcRetFmt = mapTypeIdNameToPrintFmt(retTypeIdName);
-      printf( "return type %s needs format '%s'\n", basicType(retTypeIdName), pcRetFmt ); 
+      const char* const pcRetFmt = mapTypeCodeToPrintFmt(retTypeCode);
+      printf( "return type %s needs format '%s'\n", basicType(retTypeCode), pcRetFmt ); 
 
       concatAcFormat( 
         "\t\tIn: '%15s PMCUTMock::callNonVoidVariadic()': TODO record call to %d-args func '%s', returning a %s", 

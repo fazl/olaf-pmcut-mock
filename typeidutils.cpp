@@ -3,9 +3,11 @@
 // Other module includes
 
 // Library includes
+#include <cassert>
 #include <cstdio>
 #include <cstring>
 #include <map>
+#include <typeinfo>
 
 typedef std::map<const char* const,const char* const> dict_t;
 
@@ -22,7 +24,7 @@ typedef std::map<const char* const,const char* const> dict_t;
 // const char* maps to PKc !!
 //
 // From this we build reverse direction map.
-static const dict_t c99Types2Names = {
+static const dict_t typeNames2Codes = {
   // Fundamental types
   GENPAIRS(char),
   GENPAIRS(signed char),
@@ -49,58 +51,60 @@ static dict_t reverseLookup(const dict_t dict){
   }
   return reversed;
 }
-static const dict_t c99Names2Types = reverseLookup(c99Types2Names);
+static const dict_t typeCodes2Names = reverseLookup(typeNames2Codes);
 
 
 //-----------------------------------------------------------------------------
 // const dict_t forceTypeDictInit(){
-//     return c99Names2Types;
+//     return typeCodes2Names;
 // }
 //-----------------------------------------------------------------------------
-const char* const basicType(const char* const typeIdName ){
+const char* const basicType(const char* const typeCode ){
     // uncomment if map lookup throws out_of_range
-    //   printf("Lookup basic type for shortcode: %s in dict c99Names2Types of size: %d\n", 
-    //        typeIdName, c99Names2Types.size()); 
-    //   fflush(0);
-  return c99Names2Types.at(typeIdName);
+    if(0 == typeCodes2Names.count(typeCode)){
+      printf("ERROR Failing to lookup basic type for shortcode: %s in dict typeCodes2Names of size: %d\n", 
+           typeCode, typeCodes2Names.size()); 
+      assert(!"Please extend types dict to include needed types");
+    }
+  return typeCodes2Names.at(typeCode);
 }
 
 //-----------------------------------------------------------------------------
-bool isLongType(const char* const typeIdName ){
-  return nullptr != strstr(c99Names2Types.at(typeIdName), "long");
+bool isLongType(const char* const typeCode ){
+  return nullptr != strstr(typeCodes2Names.at(typeCode), "long");
 }
 
 //-----------------------------------------------------------------------------
-bool isPtrType(const char* const typeIdName ){
-  return nullptr != strstr(c99Names2Types.at(typeIdName), "*");
+bool isPtrType(const char* const typeCode ){
+  return nullptr != strstr(typeCodes2Names.at(typeCode), "*");
 }
 
 //-----------------------------------------------------------------------------
-bool isStringType(const char* const typeIdName ){
-  return nullptr != strstr(c99Names2Types.at(typeIdName), "char*");
+bool isStringType(const char* const typeCode ){
+  return nullptr != strstr(typeCodes2Names.at(typeCode), "char*");
 }
 
 //-----------------------------------------------------------------------------
-bool isUnsignedType(const char* const typeIdName ){
-  return nullptr != strstr(c99Names2Types.at(typeIdName), "unsigned");
+bool isUnsignedType(const char* const typeCode ){
+  return nullptr != strstr(typeCodes2Names.at(typeCode), "unsigned");
 }
 
 //-----------------------------------------------------------------------------
-const char* const mapTypeIdNameToPrintFmt(const char* const retTypeIdName){
-  if( isStringType(retTypeIdName) ){
+const char* const mapTypeCodeToPrintFmt(const char* const typeCode){
+  if( isStringType(typeCode) ){
     printf( "\t\tString " ); 
     return "'%s'";
-  }else if(isPtrType(retTypeIdName)){
+  }else if(isPtrType(typeCode)){
     printf( "\t\tPtr   "); 
     return "%p";
   }else{
     printf( "\t\tIntegral "); 
     static char acBuf[]={'%',0,0,0};
     int nextIdx = 1;
-    if(isLongType(retTypeIdName)){
+    if(isLongType(typeCode)){
         acBuf[nextIdx++] = 'l';
     }
-    acBuf[nextIdx++] = isUnsignedType(retTypeIdName) ? 'u' : 'd';
+    acBuf[nextIdx++] = isUnsignedType(typeCode) ? 'u' : 'd';
     return acBuf;
   }
 }
@@ -108,16 +112,16 @@ const char* const mapTypeIdNameToPrintFmt(const char* const retTypeIdName){
 //-----------------------------------------------------------------------------
 void printTypeIds(){
   printf("---------------------------------------\n");
-  for(dict_t::const_iterator i = c99Names2Types.begin(); i != c99Names2Types.end(); ++i){
+  for(dict_t::const_iterator i = typeCodes2Names.begin(); i != typeCodes2Names.end(); ++i){
     printf("typeid(..).name() %s represents type: %s \n", i->first, i->second );
   }
   printf("---------------------------------------\n");
-  for(dict_t::const_iterator i = c99Types2Names.begin(); i != c99Types2Names.end(); ++i){
-    const char* const arithType = i->first;
-    const char* const typeIdName = i->second;
+  for(dict_t::const_iterator i = typeNames2Codes.begin(); i != typeNames2Codes.end(); ++i){
+    const char* const typeName = i->first;
+    const char* const typeCode = i->second;
     
     printf("typeid(..).name() of %-15s -like %-15s- is %s, \n",
-           arithType, basicType(typeIdName), typeIdName );
+           typeName, basicType(typeCode), typeCode );
   }
   printf("---------------------------------------\n");
 }
