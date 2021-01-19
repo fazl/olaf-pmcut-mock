@@ -10,8 +10,11 @@
 //
 
    
-// Map type shortcode to original type (not typedef)
+// Lookup type name for given type code 
 const char* const basicType(const char* const typeCode );
+
+// If typeCode not already registered, map it to typeName
+void ensureTypeRegistered(const char* const typeCode, const char* const typeName);
 
 // Is original a long type ?
 bool isLongType(const char* const typeCode );

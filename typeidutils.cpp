@@ -51,7 +51,26 @@ static dict_t reverseLookup(const dict_t dict){
   }
   return reversed;
 }
-static const dict_t typeCodes2Names = reverseLookup(typeNames2Codes);
+static dict_t typeCodes2Names = reverseLookup(typeNames2Codes);
+
+// At program startup we seed the dictionary with real names.
+// 
+// At runtime, I don't see how to pass the type's verbatim name.
+// Will have to pass the code as the name in that case.
+// At least there will be a 'representation' of the name available.
+// Will have to see how that works out...
+void ensureTypeRegistered(const char* const typeCode, const char* const typeName){
+    // Note: operator[] inserts and returns default entry if missing
+    const char* const existingTypeName = typeCodes2Names[typeCode]; 
+    if(0 == existingTypeName){                          // typeCode not mapped: add it
+      printf("Mapping new type code '%s' to type '%s'\n", typeCode, typeName);
+      typeCodes2Names.insert(std::make_pair(typeCode, typeName)); 
+      // doesn't like typeCodes2Names[typeCode] = typeName;
+    }else if(0 != strncmp(typeName, existingTypeName, strlen(typeName))){ 
+        printf("Type code '%s' already mapped to type '%s' (!= supplied type '%s'))\n", 
+               typeCode, existingTypeName, typeName);
+    }
+}
 
 
 //-----------------------------------------------------------------------------
