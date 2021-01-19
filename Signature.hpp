@@ -2,7 +2,7 @@
 #define SIGNATURE_H 1
 
 // Other module includes
-#include "typeidutils.hpp"
+#include "typeidutils.hpp"  // TODO : RENAME TO TYPEUTILS AND USE MODULE APPROACH
 
 // Library includes
 #include <iostream>
@@ -21,10 +21,18 @@
 
 class ArgBase{};
 
+// TODO: can the constructor update the typeName2Code map if needed ?
+//
 template <class A>  struct Argument : public ArgBase
 {
     A value;
-    Argument(A a) : value(a){}
+    Argument(A a) : value(a){
+        // Code for type A will be needed in the type information map
+        // Kludge.. but it may suffice for our needs
+        const char* const typeCode = typeid(value).name();
+        ensureTypeRegistered(typeCode, typeCode); 
+
+    }
 };
 
 class Signature
@@ -41,8 +49,10 @@ class Signature
   : name(fName) 
   {
       ret = new Argument<RetType>(retVal);
-    //   std::tuple<ArgTypes...> topper = std::make_tuple(argVals...);
-      std::cout<<"Signature ctor: fName='"<<fName<<"', returns a " << basicType(typeid(retVal).name()) << "=" << retVal << "\n";
+      // TODO: Retire bloaty iostreams lib throughout 
+      std::cout<<"Signature ctor: fName='"<<fName<< "', takes " << sizeof...(argVals) << " args, " 
+               << "returns a " << basicType(typeid(retVal).name()) << "=" << retVal << "\n";
+      std::tuple<ArgTypes...> toppy = std::make_tuple(argVals...);
  }
 };
 
